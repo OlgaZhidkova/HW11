@@ -13,11 +13,11 @@ class ViewController: UIViewController, CAAnimationDelegate {
     
     private lazy var timerLable: UILabel = {
         let lable = UILabel()
-        lable.text = "25:00"
+        lable.text = "00:00"
         lable.font = .systemFont(ofSize: 70, weight: .light)
         lable.textAlignment = .center
         lable.frame = CGRect(x: 110, y: 355, width: 195, height: 90)
-        lable.textColor = .systemRed
+        lable.textColor = .systemGray
         return lable
     }()
     
@@ -44,7 +44,7 @@ class ViewController: UIViewController, CAAnimationDelegate {
         button.setImage(playImage, for: .normal)
         button.frame = CGRect(x: 180, y: 520, width: 60, height: 60)
         button.addTarget(self, action: (#selector(startButtonTapped(_:))), for: .touchUpInside)
-        button.tintColor = .systemRed
+        button.tintColor = .systemGray
         return button
     }()
     
@@ -93,46 +93,54 @@ class ViewController: UIViewController, CAAnimationDelegate {
     var isWorkTime = true
     var timer = Timer()
     var isTimerStarted = false
-    var time = 25
+    var time = 1500
     
     // MARK: - Functions
 
     @IBAction func workButtonTapped(_ sender: Any) {
         isWorkTime = true
-        stopAnimation()
-        timer.invalidate()
-        isTimerStarted = false
-        startButton.setImage(playImage, for: .normal)
-        
         workButton.isEnabled = false
         workButton.alpha = 0.5
+        
+        isTimerStarted = false
+        timer.invalidate()
+        time = 1500
+        
+        stopAnimation()
+        
         restButton.isEnabled = true
         restButton.alpha = 1
-        
+            
         timerLable.text = "25:00"
         timerLable.textColor = .systemRed
-        startButton.tintColor = .systemRed
         
-        time = 25
+        startButton.setImage(playImage, for: .normal)
+        startButton.tintColor = .systemRed
+        startButton.isEnabled = true
+        resetButton.isEnabled = true
     }
     
     @IBAction func restButtonTapped(_ sender: Any) {
         isWorkTime = false
-        stopAnimation()
-        timer.invalidate()
-        isTimerStarted = false
-        startButton.setImage(playImage, for: .normal)
-        
         restButton.isEnabled = false
         restButton.alpha = 0.5
+        
+        isTimerStarted = false
+        timer.invalidate()
+        time = 300
+        
+        stopAnimation()
+        
         workButton.isEnabled = true
         workButton.alpha = 1
         
         timerLable.text = "05:00"
         timerLable.textColor = .systemGreen
-        startButton.tintColor = .systemGreen
         
-        time = 5
+        startButton.tintColor = .systemGreen
+        startButton.setImage(playImage, for: .normal)
+        startButton.isEnabled = true
+        resetButton.isEnabled = true
     }
     
     @IBAction func startButtonTapped(_ sender: Any) {
@@ -169,11 +177,11 @@ class ViewController: UIViewController, CAAnimationDelegate {
         if isWorkTime == false {
             timerLable.text = "05:00"
             timerLable.textColor = .systemGreen
-            time = 5
+            time = 300
         } else {
             timerLable.text = "25:00"
             timerLable.textColor = .systemRed
-            time = 25
+            time = 1500
         }
     }
         
@@ -191,10 +199,10 @@ class ViewController: UIViewController, CAAnimationDelegate {
 
             if isWorkTime == false {
                 timerLable.text = "05:00"
-                time = 5
+                time = 300
             } else {
                 timerLable.text = "25:00"
-                time = 25
+                time = 1500
             }
             
         } else {
@@ -252,9 +260,9 @@ class ViewController: UIViewController, CAAnimationDelegate {
         animation.toValue = 1
         
         if isWorkTime == false {
-            animation.duration = 5
+            animation.duration = 300
         } else {
-            animation.duration = 25
+            animation.duration = 1500
         }
         
         animation.delegate = self
@@ -309,6 +317,10 @@ class ViewController: UIViewController, CAAnimationDelegate {
         view.addSubview(resetButton)
         view.addSubview(workButton)
         view.addSubview(restButton)
+        
+        resetButton.isEnabled = false
+        resetButton.alpha = 0.5
+        startButton.isEnabled = false
         
         createCircleLayer()
     }
